@@ -124,6 +124,22 @@ elseif(APPLE)
     list(APPEND GAME_SOURCE ${cc_common_res})
 endif()
 
+# PluginChartboost-Lua
+
+if(ANDROID)
+
+    list(APPEND GAME_SOURCE ${RUNTIME_SRC_ROOT}/Classes/PluginChartboostLua.cpp)
+
+    list(APPEND GAME_SOURCE ${RUNTIME_SRC_ROOT}/Classes/PluginChartboostLuaHelper.cpp)
+
+endif()
+# sdkbox-Lua
+
+if(ANDROID)
+
+    list(APPEND GAME_SOURCE ${RUNTIME_SRC_ROOT}/Classes/SDKBoxLuaHelper.cpp)
+
+endif()
 set(APP_SRC ${GAME_HEADER} ${GAME_SOURCE})
 
 # mark app complie info and libs info
@@ -147,6 +163,18 @@ endif()
 
 # mark app resources, resource will be copy auto after mark
 setup_cocos_app_config(${APP_NAME})
+# PluginChartboost
+if(ANDROID)
+    add_definitions(-DSDKBOX_ENABLED)
+    add_subdirectory(${RUNTIME_SRC_ROOT}/proj.android/app/jni/PluginChartboost/)
+    target_link_libraries(${APP_NAME} ext_PluginChartboost)
+endif()
+# sdkbox
+if(ANDROID)
+    add_definitions(-DSDKBOX_ENABLED)
+    add_subdirectory(${RUNTIME_SRC_ROOT}/proj.android/app/jni/sdkbox/)
+    target_link_libraries(${APP_NAME} ext_sdkbox)
+endif()
 if(APPLE)
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
     if(MACOSX)
